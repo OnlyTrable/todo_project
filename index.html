@@ -23,8 +23,10 @@
       href="assets/icons/favicon-16x16.png"
     />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Flex:opsz,wght@8..144,400&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -33,19 +35,95 @@
      To-do-list--Community-?
      node-id=0-1&p=f&t=sJctarBVO0b4quyd-0 -->
     <div class="main-container">
-      <div class="datatime"></div>
+      <div class="datatime">
+        <span class="day-of-week"></span>
+        <!-- Перевірте цей клас -->
+        <span class="date-month"></span>
+        <!-- Перевірте цей клас -->
+      </div>
       <div class="search-container">
-        <div class="search"><input type="text" placeholder="Поиск" /></div>
-        <div class="search-icon"></div>
+        <input class="search-input" type="text" placeholder="Поиск" />
+        <img
+          class="search-icon"
+          src="assets/icons/search.svg"
+          alt="Search Icon"
+        />
       </div>
       <div class="filter-container">
-        <div class="alltasks">Все</div>
-        <div class="activetasks">Активные</div>
-        <div class="completedtasks">Завершенные</div>
+        <div class="filter-button alltasks active-filter">
+          <!-- Додаємо filter-button -->
+          <img
+            src="assets/icons/check-icon.svg"
+            alt="Selected"
+            class="filter-check-icon"
+          />
+          Все
+        </div>
+        <div class="filter-button activetasks">
+          <!-- Додаємо filter-button -->
+          <img
+            src="assets/icons/check-icon.svg"
+            alt="Selected"
+            class="filter-check-icon"
+          />
+          Активные
+        </div>
+        <div class="filter-button completedtasks">
+          <!-- Додаємо filter-button -->
+          <img
+            src="assets/icons/check-icon.svg"
+            alt="Selected"
+            class="filter-check-icon"
+          />
+          Завершенные
+        </div>
       </div>
       <div class="task-container"></div>
-      <div class="fab-button"></div>
+      <div class="fab-button">
+        <img src="assets/icons/fab-icon.svg" alt="Add Task" />
+      </div>
     </div>
   </body>
+  <!-- Форма додавання завдання (прихована за замовчуванням) -->
+  <div id="add-task-form" class="add-task-form hidden">
+    <!-- Додаємо клас hidden -->
+    <!-- Кнопка закриття форми -->
+    <button
+      id="close-form-button"
+      class="close-form-button"
+      aria-label="Закрити"
+    >
+      &times;
+    </button>
+    <!-- Елементи форми -->
+    <div class="drag-handle-container">
+      <img
+        src="assets/icons/drag_handle.svg"
+        alt="Drag Handle"
+        class="drag-handle-icon"
+      />
+    </div>
+    <input type="text" class="task-input" placeholder="Описание" />
+    <input type="text" class="task-input" placeholder="Дата" />
+    <div class="form-row-4">
+      <span class="remind-label">Напомнить мне</span>
+      <div class="switch-container" role="switch" aria-checked="true">
+        <!-- Початковий стан "увімкнено" -->
+        <div class="switch-handle">
+          <img
+            src="assets/icons/switch.svg"
+            alt="Switch Icon"
+            class="switch-icon"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="form-placeholder"></div>
+    <div class="form-button-container">
+      <!-- Новий контейнер для кнопок -->
+      <button class="save-task-button">Добавить</button>
+      <button class="cancel-button">Отмена</button>
+    </div>
+  </div>
   <script src="scripts/index.js"></script>
 </html>

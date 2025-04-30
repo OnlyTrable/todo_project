@@ -15,45 +15,343 @@
 }
 .datatime {
   width: 396px;
-  height: 46px;
+  /*height: 46px;*/
+  display: flex; /* Вмикає Flexbox */
+  flex-direction: column; /* Розташовує дочірні елементи в стовпчик */
+  align-items: flex-start; /* Вирівнює їх по лівому краю */
+  padding: 24px 16px 8px 16px; /* Додаємо відступи: верх право низ ліво */
+}
+.day-of-week {
+  font-family: "Inter", sans-serif; /* Переконайтесь, що шрифт підключено */
+  font-weight: 500; /* Medium */
+  font-size: 20px;
+  line-height: 1; /* 100% */
+  letter-spacing: normal; /* 0% */
+  color: #1d1b20; /* Основний темний колір */
+}
+
+.date-month {
+  font-family: "Inter", sans-serif;
+  font-weight: 400; /* Regular */
+  font-size: 15px;
+  line-height: 1; /* 100% */
+  letter-spacing: normal; /* 0% */
+  color: #49454f; /* Другорядний колір */
 }
 .search-container {
   width: 396px;
   min-width: 360px;
   max-width: 720px;
+  /* min-width та max-width не потрібні при фіксованій width */
   height: 48px;
   border-radius: 28px;
   display: flex;
   align-items: center;
   background-color: #6750a40d;
-  /*background-color: #1d1b2014;*/
+  padding: 0 8px; /* Додаємо внутрішні відступи для іконки та тексту */
+  box-sizing: border-box; /* Включаємо padding в загальну ширину */
+  gap: 4px; /* Відстань між інпутом та іконкою */
 }
-.search-container input {
-  margin-left: 20px;
-  width: 336px;
-  height: 40px;
-  background-color: #6750a40d;
-  border-width: 0px;
-  border-style: solid;
-  color: #49454f;
-  font-family: "Inter";
+
+/* Видаляємо неправильно вкладені стилі */
+
+.search-input {
+  flex-grow: 1; /* Дозволяє полю зайняти весь доступний простір */
+  height: 100%; /* Займає всю висоту контейнера */
+  background-color: transparent; /* Робимо фон прозорим */
+  border: none; /* Прибираємо рамку */
+  outline: none; /* Прибираємо контур при фокусі */
+  color: #49454f; /* Колір тексту */
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
+  padding: 0; /* Внутрішні відступи не потрібні, керуються батьком */
+}
+
+/* Стилі для плейсхолдера */
+.search-input::placeholder {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px; /* Може бути обмежено висотою інпута */
+  letter-spacing: 0.5px;
+  color: #49454f; /* Колір плейсхолдера, якщо відрізняється */
+  /* vertical-align: middle; */ /* Не потрібен */
+}
+
+.search-icon {
+  width: 24px; /* Розмір іконки */
+  height: 24px; /* Розмір іконки */
 }
 .filter-container {
   width: 396px;
   height: 48px;
-  border-radius: 28px;
+  border-radius: 28px; /* Прибираємо з контейнера */
   background-color: #6750a40d;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between; /* Розподіляємо кнопки */
+  box-sizing: border-box;
   gap: 0px;
 }
-.alltasks .activetasks .completedtasks {
-  width: 132.67px;
-  height: 40px;
+.alltasks,
+.activetasks,
+.completedtasks {
+  width: 132.67px; /* Фіксована ширина */
+  height: 48px;
+  border: 1px solid #cac4d0; /* Додаємо бордер 1px, колір як приклад */
+  background-color: #6750a40d; /* Фон для НЕактивних кнопок */
+  color: #1d1b20; /* Колір тексту для НЕактивних кнопок (приклад) */
+  border-radius: 0; /* Скидаємо радіус для всіх кнопок за замовчуванням */
+  gap: 8px; /* Відстань між іконкою та текстом */
+  display: flex;
   justify-content: center;
   align-items: center;
+  font-family: "Inter", sans-serif;
+  font-weight: 500; /* Medium */
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Плавний перехід */
+}
+
+/* Заокруглення для першої кнопки (ліві кути) */
+.filter-container > :first-child {
+  border-top-left-radius: 28px;
+  border-bottom-left-radius: 28px;
+}
+/* Заокруглення для останньої кнопки (праві кути) */
+.filter-container > :last-child {
+  border-top-right-radius: 28px;
+  border-bottom-right-radius: 28px;
+}
+.filter-check-icon {
+  display: none; /* Ховаємо іконку за замовчуванням */
+  width: 18px; /* Розмір іконки */
+  height: 18px; /* Розмір іконки */
+}
+
+.active-filter {
+  background-color: #e8def8; /* Фон для АКТИВНОЇ кнопки */
+  color: #1d1b20; /* Колір тексту для АКТИВНОЇ кнопки (приклад) */
+}
+
+/* Показуємо іконку тільки в активному фільтрі */
+.active-filter .filter-check-icon {
+  display: inline-block; /* Або block, залежно від потреби */
+}
+
+.task-container {
+  width: 396px;
+  height: 696px; /* Увага: фіксована висота може призвести до переповнення */
+  background-color: #6750a40d;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto; /* Додаємо вертикальну прокрутку при переповненні */
+}
+.fab-button {
+  position: fixed; /* Фіксоване позиціонування відносно вікна браузера */
+  bottom: 16px; /* 16px від нижнього краю */
+  right: 16px; /* 16px від правого краю */
+  width: 56px; /* Стандартна ширина FAB */
+  height: 56px; /* Стандартна висота FAB */
+  background-color: #ebdef7;
+  border-radius: 10%; /* Робить кнопку круглою */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); /* Тінь для ефекту "плавання" */
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Плавний перехід для hover */
+}
+
+.fab-button img {
+  width: 28px; /* Розмір іконки всередині кнопки */
+  height: 28px; /* Розмір іконки всередині кнопки */
+}
+/* Стилі для форми додавання завдання */
+.add-task-form {
+  display: none; /* Прихована за замовчуванням */
+  position: fixed;
+  top: 0;
+  left: 0; /* Або 50% з transform: translateX(-50%) для центрування */
+  width: 428px;
+  height: 328px;
+  background-color: #f7f2fa;
+  border-radius: 8px;
+  z-index: 1000; /* Щоб була поверх інших елементів */
+  padding: 20px; /* Додамо відступи для вмісту */
+  box-sizing: border-box;
+  display: flex; /* Вмикаємо Flexbox */
+  flex-direction: column; /* Вертикальний напрямок */
+  gap: 16px; /* Відстань між елементами */
+}
+
+/* Стилі для кнопки закриття форми */
+.close-form-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px; /* Розмір хрестика */
+  cursor: pointer;
+}
+
+/* Утилітарний клас для приховування */
+.hidden {
+  display: none !important;
+}
+/* Стилі для іконки перетягування */
+
+/* Стилі для контейнера іконки перетягування */
+.drag-handle-container {
+  width: 100%; /* Займає всю доступну ширину (з урахуванням padding батька) */
+  height: 36px;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex; /* Для центрування іконки */
+  justify-content: center; /* Центрування по горизонталі */
+  align-items: center; /* Центрування по вертикалі */
+}
+
+/* Стилі для полів вводу */
+.task-input {
+  width: 100%; /* Займає всю доступну ширину (з урахуванням padding батька) */
+  height: 56px;
+  border-radius: 4px;
+  border: 1px solid #79747e; /* Оновлено колір рамки */
+  padding: 0 16px; /* Внутрішні відступи для тексту */
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  background-color: transparent; /* Робимо фон прозорим, щоб бачити фон форми */
+}
+
+/* Стилі для плейсхолдера полів вводу */
+.task-input::placeholder {
+  font-family: "Roboto Flex", sans-serif; /* Оновлено шрифт */
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  color: #49454f; /* Оновлено колір */
+}
+.form-button-container {
+  display: flex; /* Вмикаємо Flexbox */
+  width: 396px; /* Ширина контейнера */
+  height: 40px; /* Висота контейнера */
+  gap: 8px; /* Проміжок між кнопками */
+  justify-content: flex-end; /* Вирівнюємо кнопки праворуч */
+  margin-top: 10px; /* Додамо невеликий відступ зверху */
+}
+/* Стилі для кнопки збереження (приклад) */
+.save-task-button {
+  width: 113px; /* Додано */
+  height: 40px;
+  background-color: #6750a4;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex; /* Додано для можливого вирівнювання іконки/тексту */
+  align-items: center; /* Додано */
+  justify-content: center; /* Додано */
+}
+.cancel-button {
+  width: 113px; /* Додано */
+  height: 40px; /* Додано */
+  border-radius: 20px; /* Додано */
+  border: 1px solid #79747e; /* Додано рамку */
+  background-color: transparent; /* Прозорий фон */
+  color: #79747e; /* Колір тексту */
+  cursor: pointer; /* Додано для кращої взаємодії */
+  font-size: 14px; /* Додано для читабельності */
+  display: flex; /* Додано для можливого вирівнювання іконки/тексту */
+  align-items: center; /* Додано */
+  justify-content: center; /* Додано */
+}
+/* Стилі для плейсхолдерів (тимчасово) */
+.form-placeholder {
+  height: 56px;
+  background-color: #e0e0e0;
+  /* Стилі для 5-го елемента (пустий div) */
+  width: 100%; /* Займає всю доступну ширину */
+  height: 12px; /* Висота згідно з вимогами */
+  padding: 10px; /* Внутрішні відступи */
+  box-sizing: border-box;
+  background-color: transparent; /* Робимо прозорим, якщо це просто відступ */
+}
+
+/* Стилі для 4-го елемента форми */
+.form-row-4 {
+  width: 100%; /* Займає всю доступну ширину */
+  height: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Додано для вертикального вирівнювання */
+  /* Можна додати фон/рамку для візуалізації */
+}
+* Стилі для тексту "Напомнить мне" */ .remind-label {
+  /* width: 121px; */ /* Ширина може бути автоматичною */
+  height: 24px;
+  font-family: "Roboto Flex", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  color: #1d1b1e;
+  white-space: nowrap; /* Забороняємо перенос рядка */
+}
+
+/* Стилі для контейнера перемикача */
+.switch-container {
+  width: 52px;
+  height: 32px;
+  border-radius: 16px;
+  padding: 2px 4px; /* top/bottom 2px, left/right 4px */
+  background: #6750a4; /* Фон увімкненого стану */
+  box-sizing: border-box;
+  position: relative; /* Для позиціонування повзунка */
+  cursor: pointer;
+  transition: background-color 0.3s ease, border 0.3s ease; /* Плавні переходи */
+  border: 2px solid transparent; /* Прозорий бордер для збереження розміру */
+}
+
+/* Стилі для повзунка (білого кружечка) */
+.switch-handle {
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px; /* Відступ зверху (32 висота контейнера - 24 висота ручки - 2*2 бордер контейнера) / 2 */
+  right: 4px; /* Початкове положення справа (відступ padding-right) */
+  transition: left 0.3s ease, right 0.3s ease; /* Плавний рух */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Стилі для іконки всередині повзунка */
+.switch-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Стилі для вимкненого стану (додаємо клас .is-off) */
+.switch-container.is-off {
+  background-color: white; /* Білий фон */
+  border: 2px solid #1d1b1e; /* Темний бордер */
+}
+
+.switch-container.is-off .switch-handle {
+  left: 4px; /* Положення зліва (відступ padding-left) */
+  right: auto; /* Скидаємо right */
 }
