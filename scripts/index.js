@@ -26,8 +26,8 @@ const switchContainerCh = document.querySelectorAll(".switch-container");
 console.log("index.js: Switch containers found:", switchContainerCh); // Перевірка знаходження контейнерів
 
 const fabButton = document.querySelector(".fab-button");
-const addTaskForm = document.getElementById("add-task-form");
-const closeFormButton = document.getElementById("close-form-button"); // Знаходимо кнопку закриття (хрестик)
 console.log("index.js: FAB button found:", fabButton); // Перевірка знаходження FAB
+const addTaskForm = document.getElementById("add-task-form");
 console.log("index.js: Add task form found:", addTaskForm); // Перевірка знаходження форми
+const closeFormButton = document.getElementById("close-form-button"); // Знаходимо кнопку закриття (хрестик)
 console.log("index.js: Close form button found:", closeFormButton); // Перевірка знаходження кнопки закриття
