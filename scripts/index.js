@@ -34,17 +34,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const fabButton = document.querySelector(".fab-button");
   const addTaskForm = document.getElementById("add-task-form");
   const closeFormButton = document.getElementById("close-form-button");
+  const cancelButton = document.querySelector(".cancel-button"); // Знаходимо кнопку "Отмена"
+  console.log("index.js: FAB button found:", fabButton);
   console.log("index.js: FAB button found:", fabButton);
   console.log("index.js: Add task form found:", addTaskForm);
   console.log("index.js: Close form button found:", closeFormButton);
+  console.log("index.js: Cancel button found:", cancelButton); // Додано лог
 
-  if (fabButton && addTaskForm && closeFormButton) {
+  if (fabButton && addTaskForm && closeFormButton && cancelButton) {
+    // Додано cancelButton до умови
     console.log("index.js: Attaching listeners for FAB and Close button");
     fabButton.addEventListener("click", () => {
       addTaskForm.classList.remove("hidden");
     });
     closeFormButton.addEventListener("click", () => {
       addTaskForm.classList.add("hidden");
+    });
+    // Додаємо обробник для кнопки "Отмена"
+    cancelButton.addEventListener("click", () => {
+      // Використовуємо ?. на випадок, якщо кнопка не знайдена
+      console.log("index.js: Cancel button clicked");
+      addTaskForm.classList.add("hidden"); // Також приховуємо форму
     });
   } else {
     console.error(
@@ -58,35 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     if (!closeFormButton)
       console.error("Не вдалося знайти кнопку закриття (#close-form-button)!");
+    if (!closeFormButton)
+      console.error("Не вдалося знайти кнопку закриття (#close-form-button)!");
+    if (!cancelButton)
+      console.error("Не вдалося знайти кнопку скасування (.cancel-button)!"); // Додано перевірку
   }
 }); // Кінець єдиного обробника DOMContentLoaded
-
-// Знаходимо всі кнопки фільтрів і додаємо обробник кліку
-const filterButtons = document.querySelectorAll(".filter-button");
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("index.js: Filter buttons found:", filterButtons); // Перевірка знаходження кнопок
-  filterButtons.forEach((button) => {
-    button.addEventListener("click", handleFilterClick); // Використовуємо імпортовану функцію
-  });
-});
-
-// --- Функціонал для FAB та форми додавання ---
-
-const fabButton = document.querySelector(".fab-button");
-const addTaskForm = document.getElementById("add-task-form");
-const closeFormButton = document.getElementById("close-form-button"); // Знаходимо кнопку закриття (хрестик)
-
-if (fabButton && addTaskForm && closeFormButton) {
-  // Обробник для FAB-кнопки: показуємо форму
-  fabButton.addEventListener("click", () => {
-    addTaskForm.classList.remove("hidden"); // Видаляємо клас hidden
-  });
-  // Обробник для кнопки "Отмена": приховуємо форму
-  closeFormButton.addEventListener("click", () => {
-    addTaskForm.classList.add("hidden"); // Додаємо клас hidden для закриття форми
-  });
-} else {
-  if (!fabButton) console.error("Не вдалося знайти FAB кнопку (.fab-button)!");
-  if (!closeFormButton)
-    console.error("Не вдалося знайти кнопку закриття (#close-form-button)!");
-}
