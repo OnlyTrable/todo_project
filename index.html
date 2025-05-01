@@ -23,6 +23,11 @@
       href="assets/icons/favicon-16x16.png"
     />
     <link rel="manifest" href="/site.webmanifest" />
+    <!-- Підключення стилів flatpickr -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -96,7 +101,13 @@
       />
     </div>
     <input type="text" class="task-input" placeholder="Описание" />
-    <input type="datetime-local" class="task-input" placeholder="Дата" />
+    <input
+      type="text"
+      id="task-datetime-picker"
+      class="task-input"
+      placeholder="Дата"
+    />
+    <!-- Змінено тип та додано ID і placeholder -->
     <div class="form-row-4">
       <span class="remind-label">Напомнить мне</span>
       <div class="switch-container" role="switch" aria-checked="true">
@@ -117,6 +128,8 @@
       <button class="cancel-button">Отмена</button>
     </div>
   </div>
-  <script type="module" src="scripts/index.js"></script>
   <!-- Додано type="module" -->
+  <script type="module" src="scripts/index.js"></script>
+  <!-- Підключення JavaScript flatpickr -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </html>

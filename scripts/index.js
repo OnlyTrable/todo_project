@@ -27,9 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const taskDescriptionInput = addTaskForm.querySelector(
     '.task-input[type="text"]'
   ); // Поле опису
-  const taskDateTimeInput = addTaskForm.querySelector(
-    '.task-input[type="datetime-local"]'
-  ); // Поле дати/часу
+  // Знаходимо поле за новим ID
+  const taskDateTimePicker = document.getElementById("task-datetime-picker");
+
   // --- Поле пошуку ---
   const searchInput = document.querySelector(".search-input");
 
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formOverlay &&
     saveTaskButton &&
     taskDescriptionInput &&
-    taskDateTimeInput &&
+    taskDateTimePicker && // ВИПРАВЛЕНО: Використовуємо нову змінну
     taskContainer && // Додаємо перевірку для taskContainer
     searchInput // Додаємо перевірку для searchInput
   ) {
@@ -51,6 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(
       "index.js: Attaching listeners for FAB, Cancel button and Overlay"
     );
+    // Ініціалізація flatpickr
+    flatpickr(taskDateTimePicker, {
+      enableTime: true, // Увімкнути вибір часу
+      dateFormat: "Y-m-d H:i", // Формат дати, який буде зберігатися у value поля
+      altInput: true, // Створити додаткове, видиме користувачу поле
+      altFormat: "j F Y, H:i", // Формат дати, який бачить користувач (напр., 14 Серпня 2024, 15:30)
+      time_24hr: true, // Використовувати 24-годинний формат часу
+    });
     fabButton.addEventListener("click", () => {
       showAddTaskForm(fabButton, addTaskForm, formOverlay); // Передаємо overlay
     });
@@ -65,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("index.js: Save button clicked");
 
       const description = taskDescriptionInput.value.trim(); // Отримуємо опис і видаляємо зайві пробіли
-      const dateTime = taskDateTimeInput.value; // Отримуємо дату і час
+      const dateTime = taskDateTimePicker.value; // Отримуємо дату і час з поля flatpickr
 
       // Проста валідація: перевіряємо, чи не порожній опис
       if (!description) {
@@ -96,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Очищаємо поля форми
       taskDescriptionInput.value = "";
-      taskDateTimeInput.value = "";
+      taskDateTimePicker._flatpickr.clear(); // Використовуємо метод flatpickr для очищення
 
       // Ховаємо форму
       hideAddTaskForm(fabButton, addTaskForm, formOverlay);
@@ -198,6 +206,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!addTaskForm)
       console.error(
         "Не вдалося знайти форму додавання завдання (#add-task-form)!"
+      );
+    if (!taskDateTimePicker)
+      console.error(
+        "Не вдалося знайти поле вибору дати/часу (#task-datetime-picker)!"
       );
     if (!cancelButton)
       console.error("Не вдалося знайти кнопку скасування (.cancel-button)!"); // Додано перевірку
