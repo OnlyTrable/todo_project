@@ -39,6 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Контейнер завдань ---
   const taskContainer = document.querySelector(".task-container");
 
+  // --- Елементи хедера ---
+  const filterContainer = document.querySelector(".filter-container"); // ВИПРАВЛЕНО: Шукаємо .filter-container
+  const titleContainer = document.querySelector(".header-title-container");
+
   if (
     fabButton &&
     addTaskForm &&
@@ -48,7 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
     taskDescriptionInput &&
     taskDateTimePicker && // ВИПРАВЛЕНО: Використовуємо нову змінну
     taskContainer && // Додаємо перевірку для taskContainer
-    searchInput // Додаємо перевірку для searchInput
+    searchInput && // Додаємо перевірку для searchInput
+    filterContainer && // Додаємо перевірку
+    titleContainer // Додаємо перевірку
   ) {
     // Додано cancelButton та formOverlay до умови
     console.log(
@@ -56,13 +62,26 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     initializeDateTimePicker(taskDateTimePicker); // Викликаємо імпортовану функцію
     fabButton.addEventListener("click", () => {
-      showAddTaskForm(fabButton, addTaskForm, formOverlay); // Передаємо overlay
+      showAddTaskForm(
+        // Залишаємо один правильний виклик
+        fabButton,
+        addTaskForm,
+        formOverlay,
+        filterContainer,
+        titleContainer
+      ); // Передаємо нові елементи
     });
     // Додаємо обробник для кнопки "Отмена"
     cancelButton.addEventListener("click", () => {
       // Використовуємо ?. на випадок, якщо кнопка не знайдена
       console.log("index.js: Cancel button clicked");
-      hideAddTaskForm(fabButton, addTaskForm, formOverlay); // Передаємо overlay
+      hideAddTaskForm(
+        fabButton,
+        addTaskForm,
+        formOverlay,
+        filterContainer,
+        titleContainer
+      ); // Передаємо нові елементи
       // Скидаємо режим редагування, якщо він був активний
       if (addTaskForm.dataset.editingTaskId) {
         delete addTaskForm.dataset.editingTaskId;
@@ -155,7 +174,13 @@ document.addEventListener("DOMContentLoaded", () => {
       taskDateTimePicker._flatpickr.clear(); // Використовуємо метод flatpickr для очищення
 
       // Ховаємо форму
-      hideAddTaskForm(fabButton, addTaskForm, formOverlay);
+      hideAddTaskForm(
+        fabButton,
+        addTaskForm,
+        formOverlay,
+        filterContainer,
+        titleContainer
+      ); // Передаємо нові елементи
 
       // TODO: Додати виклик функції для оновлення списку завдань на сторінці
       // Оновлюємо список після додавання/редагування
@@ -216,7 +241,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (taskToEdit) {
           // Якщо підготовка успішна, показуємо форму
-          showAddTaskForm(fabButton, addTaskForm, formOverlay);
+          showAddTaskForm(
+            // Додаємо відсутні аргументи
+            fabButton,
+            addTaskForm,
+            formOverlay,
+            filterContainer,
+            titleContainer
+          );
         }
       } // Кінець else if (taskItem)
     }
@@ -308,5 +340,13 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Не вдалося знайти поле пошуку (.search-input)!"); // Додано перевірку
     if (!taskContainer)
       console.error("Не вдалося знайти контейнер завдань (.task-container)!"); // Додано перевірку
+    if (!filterContainer)
+      console.error(
+        "Не вдалося знайти контейнер фільтрів (.filter-container)!"
+      ); // ВИПРАВЛЕНО: Повідомлення про помилку
+    if (!titleContainer)
+      console.error(
+        "Не вдалося знайти контейнер заголовка (.header-title-container)!"
+      ); // Додано перевірку
   }
 }); // Кінець єдиного обробника DOMContentLoaded

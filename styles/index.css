@@ -143,6 +143,24 @@
   display: inline-block; /* Або block, залежно від потреби */
 }
 
+/* Стилі для контейнера заголовка "Список дел" */
+.header-title-container {
+  padding: 10px 16px 10px 0; /* Прибираємо лівий відступ (top right bottom left) */
+  width: 396px; /* Встановлюємо ширину, як у filter-container */
+  text-align: left; /* Вирівнюємо заголовок по лівому краю */
+  /* Переконайся, що висота відповідає .filter-container, якщо потрібно */
+  /* height: 48px; */
+  /* display: flex; */
+  /* align-items: center; */
+  /* justify-content: center; */
+  box-sizing: border-box;
+}
+.header-title-container h2 {
+  font-size: 18px; /* Розмір заголовка */
+  font-weight: 500;
+  color: #1d1b1e; /* Колір тексту */
+  margin: 0; /* Прибираємо стандартні відступи */
+}
 .task-container {
   width: 396px;
   height: 696px; /* Увага: фіксована висота може призвести до переповнення */
