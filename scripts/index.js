@@ -165,7 +165,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     // Додаємо слухачі до кнопок фільтрів
     filterButtons.forEach((button) => {
-      button.addEventListener("click", handleFilterClick);
+      // Замінюємо простий виклик handleFilterClick на повну логіку
+      button.addEventListener("click", (event) => {
+        // Використовуємо div як "button"
+        // 1. Оновлюємо візуальний стан кнопки (викликаємо імпортовану функцію)
+        handleFilterClick(event);
+
+        // 2. Визначаємо тип фільтра за класом елемента
+        const clickedElement = event.currentTarget;
+        if (clickedElement.classList.contains("alltasks")) {
+          currentFilterStatus = "all";
+        } else if (clickedElement.classList.contains("activetasks")) {
+          currentFilterStatus = "active";
+        } else if (clickedElement.classList.contains("completedtasks")) {
+          currentFilterStatus = "completed";
+        }
+        console.log(`index.js: Filter changed to: ${currentFilterStatus}`);
+        // 3. Перерендеримо список з новим фільтром статусу та поточним пошуковим запитом
+        renderTasks({
+          searchTerm: currentSearchTerm,
+          status: currentFilterStatus,
+        });
+        attachTaskListeners(); // Переприв'язуємо слухачі
+      });
     });
   } else {
     console.error(
