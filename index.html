@@ -84,6 +84,8 @@
       </div>
     </div>
   </body>
+  <!-- Напівпрозорий фон (overlay) для форми -->
+  <div id="form-overlay" class="form-overlay hidden"></div>
   <!-- Форма додавання завдання (прихована за замовчуванням) -->
   <div id="add-task-form" class="add-task-form hidden">
     <!-- Додаємо клас hidden -->
@@ -96,7 +98,7 @@
       />
     </div>
     <input type="text" class="task-input" placeholder="Описание" />
-    <input type="text" class="task-input" placeholder="Дата" />
+    <input type="datetime-local" class="task-input" placeholder="Дата" />
     <div class="form-row-4">
       <span class="remind-label">Напомнить мне</span>
       <div class="switch-container" role="switch" aria-checked="true">

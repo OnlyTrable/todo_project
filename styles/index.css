@@ -177,12 +177,15 @@
 .add-task-form {
   display: none; /* Прихована за замовчуванням */
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0; /* Або 50% з transform: translateX(-50%) для центрування */
   width: 428px;
   height: 328px;
   background-color: #f7f2fa;
-  border-radius: 8px;
+  border-top-right-radius: 28px;
+  border-top-left-radius: 28px;
+  border-bottom-right-radius: 16px;
+  border-bottom-left-radius: 16px;
   z-index: 1000; /* Щоб була поверх інших елементів */
   padding: 20px; /* Додамо відступи для вмісту */
   box-sizing: border-box;
@@ -201,7 +204,19 @@
   font-size: 24px; /* Розмір хрестика */
   cursor: pointer;
 }
-
+/* Стилі для напівпрозорого фону (overlay) */
+.form-overlay {
+  position: fixed; /* Фіксоване позиціонування */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Чорний з 40% прозорістю */
+  z-index: 999; /* Має бути нижче форми (z-index: 1000), але вище решти контенту */
+  /* display: none; */ /* Буде керуватися класом .hidden */
+  /* Можна додати плавний перехід */
+  /* transition: opacity 0.3s ease; */
+}
 /* Утилітарний клас для приховування */
 .hidden {
   display: none !important;
