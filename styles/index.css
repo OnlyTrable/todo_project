@@ -466,3 +466,65 @@
   left: 4px; /* Положення зліва (відступ padding-left) */
   right: auto; /* Скидаємо right */
 }
+/* --- Кастомізація стилів flatpickr --- */
+
+/* Загальний фон календаря */
+.flatpickr-calendar {
+  background-color: #f7f2fa;
+  border-radius: 8px; /* Можна додати заокруглення */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Можна додати тінь */
+}
+
+/* Фон вибраного дня */
+.flatpickr-day.selected,
+.flatpickr-day.startRange, /* Також для початку/кінця діапазону, якщо використовується */
+.flatpickr-day.endRange {
+  background-color: #6750a4;
+  border-color: #6750a4; /* Зробимо рамку того ж кольору */
+  color: #ffffff; /* Зробимо текст білим для контрасту */
+}
+/* Загальний шрифт для календаря */
+.flatpickr-calendar {
+  font-family: "Inter", sans-serif; /* Змінено на Inter */
+  font-size: 14px; /* Базовий розмір шрифту */
+  color: #1d1b1e; /* Основний колір тексту */
+}
+
+/* Дні тижня (Пн, Вт...) */
+.flatpickr-weekday {
+  font-family: "Inter", sans-serif; /* Змінено на Inter */
+  font-weight: 500; /* Можна зробити трохи жирнішим */
+  color: #49454f; /* Трохи світліший колір */
+}
+
+/* Поточний місяць та рік (навігація) */
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month .numInputWrapper input.numInput {
+  /* Уточнено селектор для року */
+  font-family: "Inter", sans-serif; /* Змінено на Inter */
+  font-size: 15px; /* Можна трохи збільшити */
+  font-weight: 500;
+  color: #1d1b1e;
+}
+
+/* Час */
+.flatpickr-time input.numInput {
+  font-family: "Inter", sans-serif; /* Змінено на Inter */
+  color: #1d1b1e;
+}
+/* Стилі для дня при наведенні та фокусі */
+.flatpickr-day:hover,
+.flatpickr-day:focus {
+  background-color: #ebdef7; /* Колір фону при наведенні/фокусі */
+  border-color: #ebdef7; /* Колір рамки при наведенні/фокусі */
+  color: #1d1b1e; /* Колір тексту при наведенні/фокусі (залишаємо темним) */
+  outline: none; /* Прибираємо стандартний контур фокусу */
+  box-shadow: none; /* Прибираємо стандартну тінь фокусу */
+}
+/* Стилі для ВЖЕ ВИБРАНОГО дня при наведенні/фокусі */
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected:focus {
+  background-color: #ebdef7; /* Той самий колір, що й для звичайного наведення */
+  border-color: #ebdef7; /* Той самий колір рамки */
+  color: #1d1b1e; /* Темний колір тексту */
+}

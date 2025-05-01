@@ -6,6 +6,7 @@ import {
   showAddTaskForm, // Імпортуємо нову функцію
   hideAddTaskForm, // Імпортуємо нову функцію
   renderTasks, // Імпортуємо функцію рендерингу
+  initializeDateTimePicker, // Імпортуємо ініціалізатор flatpickr
 } from "./uiFunctions.js";
 // Імпортуємо функції з іншого файлу
 // Важливо: шлях має бути відносним і починатися з ./ або ../
@@ -51,14 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(
       "index.js: Attaching listeners for FAB, Cancel button and Overlay"
     );
-    // Ініціалізація flatpickr
-    flatpickr(taskDateTimePicker, {
-      enableTime: true, // Увімкнути вибір часу
-      dateFormat: "Y-m-d H:i", // Формат дати, який буде зберігатися у value поля
-      altInput: true, // Створити додаткове, видиме користувачу поле
-      altFormat: "j F Y, H:i", // Формат дати, який бачить користувач (напр., 14 Серпня 2024, 15:30)
-      time_24hr: true, // Використовувати 24-годинний формат часу
-    });
+    initializeDateTimePicker(taskDateTimePicker); // Викликаємо імпортовану функцію
     fabButton.addEventListener("click", () => {
       showAddTaskForm(fabButton, addTaskForm, formOverlay); // Передаємо overlay
     });
