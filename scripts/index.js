@@ -9,15 +9,16 @@ import {
   initializeDateTimePicker, // Імпортуємо ініціалізатор flatpickr
   toggleTaskStatus, // Імпортуємо функцію зміни статусу
   prepareEditForm, // Імпортуємо функцію підготовки форми редагування
-} from "./uiFunctions.js";
-// Імпортуємо функції з іншого файлу
+} from "./uiFunctions.js"; // Імпортуємо функції UI
+import { t, initI18n } from "./i18n.js"; // Імпортуємо функції локалізації
+
 // Важливо: шлях має бути відносним і починатися з ./ або ../
 console.log("index.js: Script started"); // Перевірка запуску скрипта
 
 // Додаємо ОДИН слухач події, який викличе функцію ПІСЛЯ завантаження DOM
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  // Робимо обробник асинхронним
   console.log("index.js: DOMContentLoaded event fired");
-  updateDateTime(); // Викликаємо імпортовану функцію
   // --- Функціонал для фільтрів ---
   const filterButtons = document.querySelectorAll(".filter-button");
   console.log("index.js: Filter buttons found:", filterButtons);
@@ -43,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterContainer = document.querySelector(".filter-container"); // ВИПРАВЛЕНО: Шукаємо .filter-container
   const titleContainer = document.querySelector(".header-title-container");
 
+  // --- Завантажуємо переклади ПЕРЕД ініціалізацією UI ---
+  await initI18n(); // Викликаємо ініціалізацію з нового модуля
+
   if (
     fabButton &&
     addTaskForm &&
@@ -56,6 +60,37 @@ document.addEventListener("DOMContentLoaded", () => {
     filterContainer && // Додаємо перевірку
     titleContainer // Додаємо перевірку
   ) {
+    // --- Оновлюємо статичний текст на сторінці ---
+    document.title = t("appTitle");
+    if (searchInput) searchInput.placeholder = t("searchPlaceholder");
+    if (titleContainer)
+      titleContainer.querySelector("h2").textContent = t("headerTitle");
+    filterButtons.forEach((button) => {
+      if (button.classList.contains("alltasks"))
+        button.childNodes[button.childNodes.length - 1].nodeValue = ` ${t(
+          "filterAll"
+        )}`;
+      // Оновлюємо текстовий вузол
+      else if (button.classList.contains("activetasks"))
+        button.childNodes[button.childNodes.length - 1].nodeValue = ` ${t(
+          "filterActive"
+        )}`;
+      else if (button.classList.contains("completedtasks"))
+        button.childNodes[button.childNodes.length - 1].nodeValue = ` ${t(
+          "filterCompleted"
+        )}`;
+    });
+    if (taskDescriptionInput)
+      taskDescriptionInput.placeholder = t("taskDescPlaceholder");
+    if (taskDateTimePicker)
+      taskDateTimePicker.placeholder = t("taskDateTimePlaceholder"); // Placeholder для видимого поля flatpickr
+    if (saveTaskButton) saveTaskButton.textContent = t("addButton"); // Початковий текст кнопки
+    if (cancelButton) cancelButton.textContent = t("cancelButton");
+    // Оновлюємо мітку "Напомнить мне"
+    const remindLabel = addTaskForm.querySelector(".remind-label");
+    if (remindLabel) remindLabel.textContent = t("remindMeLabel");
+    // --- Кінець оновлення статичного тексту ---
+
     // Додано cancelButton та formOverlay до умови
     console.log(
       "index.js: Attaching listeners for FAB, Cancel button and Overlay"
@@ -87,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
         delete addTaskForm.dataset.editingTaskId;
         delete addTaskForm.dataset.originalDescription;
         delete addTaskForm.dataset.originalDateTime;
-        saveTaskButton.textContent = "Добавить"; // Повертаємо текст кнопки
+        saveTaskButton.textContent = t("addButton"); // Повертаємо текст кнопки
         taskDescriptionInput.value = ""; // Очищаємо поля
         taskDateTimePicker._flatpickr.clear();
       }
@@ -101,12 +136,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Проста валідація: перевіряємо, чи не порожній опис
       if (!description) {
-        alert("Пожалуйста, введите описание задачи."); // Або краще показати повідомлення у формі
+        alert(t("alertDescRequired")); // Використовуємо переклад
         return; // Не додаємо завдання, якщо опис порожній
       }
       // Перевіряємо, чи вибрана дата та час
       if (!dateTime) {
-        alert("Пожалуйста, выберите дату и время задачи.");
+        alert(t("alertDateTimeRequired")); // Використовуємо переклад
         return; // Не додаємо завдання, якщо дата/час не вибрані
       }
 
@@ -130,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
           delete addTaskForm.dataset.editingTaskId;
           delete addTaskForm.dataset.originalDescription;
           delete addTaskForm.dataset.originalDateTime;
-          saveTaskButton.textContent = "Добавить";
+          saveTaskButton.textContent = t("addButton");
           taskDescriptionInput.value = "";
           taskDateTimePicker._flatpickr.clear();
           return; // Виходимо, нічого не зберігаємо
@@ -152,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
         delete addTaskForm.dataset.editingTaskId;
         delete addTaskForm.dataset.originalDescription;
         delete addTaskForm.dataset.originalDateTime;
-        saveTaskButton.textContent = "Добавить";
+        saveTaskButton.textContent = t("addButton");
       } else {
         // --- Режим додавання нового завдання ---
         console.log("TODO: Add new task");
@@ -238,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
           taskDateTimePicker,
           saveTaskButton
         );
-
+        if (taskToEdit) saveTaskButton.textContent = t("saveButton"); // Змінюємо текст кнопки при редагуванні
         if (taskToEdit) {
           // Якщо підготовка успішна, показуємо форму
           showAddTaskForm(
@@ -252,6 +287,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } // Кінець else if (taskItem)
     }
+    // --- Ініціалізація після завантаження перекладів ---
+    updateDateTime(); // Оновлюємо дату/час (можливо, теж потребує локалізації формату?)
 
     // --- Автоматичне завершення прострочених завдань ---
     try {
@@ -349,4 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Не вдалося знайти контейнер заголовка (.header-title-container)!"
       ); // Додано перевірку
   }
+  // Викликаємо рендеринг навіть якщо якісь елементи не знайдено,
+  // щоб показати завдання або повідомлення "Немає завдань"
+  renderTasks(); // Початковий рендеринг
 }); // Кінець єдиного обробника DOMContentLoaded
