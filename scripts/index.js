@@ -7,6 +7,8 @@ import {
   hideAddTaskForm, // Імпортуємо нову функцію
   renderTasks, // Імпортуємо функцію рендерингу
   initializeDateTimePicker, // Імпортуємо ініціалізатор flatpickr
+  toggleTaskStatus, // Імпортуємо функцію зміни статусу
+  prepareEditForm, // Імпортуємо функцію підготовки форми редагування
 } from "./uiFunctions.js";
 // Імпортуємо функції з іншого файлу
 // Важливо: шлях має бути відносним і починатися з ./ або ../
@@ -61,6 +63,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // Використовуємо ?. на випадок, якщо кнопка не знайдена
       console.log("index.js: Cancel button clicked");
       hideAddTaskForm(fabButton, addTaskForm, formOverlay); // Передаємо overlay
+      // Скидаємо режим редагування, якщо він був активний
+      if (addTaskForm.dataset.editingTaskId) {
+        delete addTaskForm.dataset.editingTaskId;
+        delete addTaskForm.dataset.originalDescription;
+        delete addTaskForm.dataset.originalDateTime;
+        saveTaskButton.textContent = "Добавить"; // Повертаємо текст кнопки
+        taskDescriptionInput.value = ""; // Очищаємо поля
+        taskDateTimePicker._flatpickr.clear();
+      }
     });
     // Додаємо обробник для кнопки "Добавить"
     saveTaskButton.addEventListener("click", () => {
@@ -79,19 +90,62 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Пожалуйста, выберите дату и время задачи.");
         return; // Не додаємо завдання, якщо дата/час не вибрані
       }
-      // Створюємо об'єкт завдання
-      const newTask = {
-        id: Date.now(), // Унікальний ID на основі часу
-        description: description,
-        dateTime: dateTime, // Зберігаємо як рядок з input type="datetime-local"
-        completed: false, // За замовчуванням не виконано
-      };
 
       // Отримуємо існуючі завдання з LocalStorage
-      const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+      let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+      const editingTaskId = addTaskForm.dataset.editingTaskId; // Отримуємо ID редагованого завдання
+      if (editingTaskId) {
+        // --- Режим редагування ---
+        const originalDescription = addTaskForm.dataset.originalDescription;
+        const originalDateTime = addTaskForm.dataset.originalDateTime;
 
-      // Додаємо нове завдання
-      tasks.push(newTask);
+        // Перевіряємо, чи були зміни
+        if (
+          description === originalDescription &&
+          dateTime === originalDateTime
+        ) {
+          console.log("index.js: No changes detected. Closing form.");
+          // Зміни не було, просто закриваємо форму
+          hideAddTaskForm(fabButton, addTaskForm, formOverlay);
+          // Скидаємо режим редагування
+          delete addTaskForm.dataset.editingTaskId;
+          delete addTaskForm.dataset.originalDescription;
+          delete addTaskForm.dataset.originalDateTime;
+          saveTaskButton.textContent = "Добавить";
+          taskDescriptionInput.value = "";
+          taskDateTimePicker._flatpickr.clear();
+          return; // Виходимо, нічого не зберігаємо
+        }
+
+        // Зміни були, оновлюємо завдання
+        const taskIndex = tasks.findIndex((task) => task.id == editingTaskId);
+        if (taskIndex !== -1) {
+          tasks[taskIndex].description = description;
+          tasks[taskIndex].dateTime = dateTime;
+          console.log(`index.js: Updated task ID: ${editingTaskId}`);
+        } else {
+          console.error(
+            `index.js: Task with ID ${editingTaskId} not found for update!`
+          );
+          // Можливо, варто показати помилку користувачу
+        }
+        // Скидаємо режим редагування після оновлення
+        delete addTaskForm.dataset.editingTaskId;
+        delete addTaskForm.dataset.originalDescription;
+        delete addTaskForm.dataset.originalDateTime;
+        saveTaskButton.textContent = "Добавить";
+      } else {
+        // --- Режим додавання нового завдання ---
+        console.log("TODO: Add new task");
+        const newTask = {
+          id: Date.now(), // Унікальний ID на основі часу
+          description: description,
+          dateTime: dateTime,
+          completed: false,
+        };
+        tasks.push(newTask);
+        console.log(`index.js: Added new task with ID: ${newTask.id}`);
+      }
 
       // Зберігаємо оновлений список у LocalStorage
       localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -104,9 +158,12 @@ document.addEventListener("DOMContentLoaded", () => {
       hideAddTaskForm(fabButton, addTaskForm, formOverlay);
 
       // TODO: Додати виклик функції для оновлення списку завдань на сторінці
-      // renderTasks();
-      renderTasks(); // Оновлюємо список після додавання нового завдання
-      attachTaskListeners(); // Переприв'язуємо слухачі після рендерингу
+      // Оновлюємо список після додавання/редагування
+      renderTasks({
+        searchTerm: currentSearchTerm,
+        status: currentFilterStatus,
+      });
+      attachTaskListeners(); // Додаємо слухачі після оновлення
     });
     // --- Змінні для зберігання поточних фільтрів ---
     let currentSearchTerm = "";
@@ -125,32 +182,72 @@ document.addEventListener("DOMContentLoaded", () => {
     function handleTaskClick(event) {
       const checkboxContainer = event.target.closest(
         ".task-checkbox-container"
-      );
+      ); // Знаходимо батьківський елемент завдання
+      const taskItem = event.target.closest(".task-item");
+
       if (checkboxContainer) {
+        // --- Пріоритет: Логіка для чекбокса (зміна статусу completed) ---
         const taskId = checkboxContainer.dataset.taskId;
         console.log(`index.js: Checkbox clicked for task ID: ${taskId}`);
-        if (taskId) {
-          // 1. Отримуємо завдання з LocalStorage
-          let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-          // 2. Знаходимо індекс завдання
-          const taskIndex = tasks.findIndex((task) => task.id == taskId); // Використовуємо ==, бо ID з dataset - рядок
-          if (taskIndex !== -1) {
-            // 3. Змінюємо статус completed
-            tasks[taskIndex].completed = !tasks[taskIndex].completed;
-            // 4. Зберігаємо оновлений список
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-            // 5. Перерендеримо список, щоб показати зміни
-            renderTasks({
-              searchTerm: currentSearchTerm,
-              status: currentFilterStatus,
-            }); // Передаємо поточні фільтри
-            attachTaskListeners(); // Важливо переприв'язати слухачі після рендерингу!
-          }
+        let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+        const updatedTasks = toggleTaskStatus(taskId, tasks); // Викликаємо функцію з uiFunctions
+        if (updatedTasks) {
+          localStorage.setItem("tasks", JSON.stringify(updatedTasks)); // Зберігаємо результат
+          renderTasks({
+            searchTerm: currentSearchTerm,
+            status: currentFilterStatus,
+          });
+          attachTaskListeners();
         }
-      }
+      } else if (taskItem) {
+        // --- Якщо клік був не по чекбоксу, а по самому завданню - відкриваємо редагування ---
+        const taskId = taskItem.dataset.taskId; // Беремо ID з .task-item
+        console.log(`index.js: Task item clicked for edit, ID: ${taskId}`);
+        let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+        // Викликаємо функцію підготовки форми з uiFunctions
+        const taskToEdit = prepareEditForm(
+          taskId,
+          tasks,
+          addTaskForm,
+          taskDescriptionInput,
+          taskDateTimePicker,
+          saveTaskButton
+        );
+
+        if (taskToEdit) {
+          // Якщо підготовка успішна, показуємо форму
+          showAddTaskForm(fabButton, addTaskForm, formOverlay);
+        }
+      } // Кінець else if (taskItem)
     }
 
-    // --- Ініціалізація ---
+    // --- Автоматичне завершення прострочених завдань ---
+    try {
+      let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+      const now = Date.now(); // Поточний час у мілісекундах
+      let tasksUpdated = false;
+
+      tasks = tasks.map((task) => {
+        if (!task.completed && task.dateTime) {
+          // Перевіряємо тільки невиконані завдання з датою
+          const taskTime = new Date(task.dateTime).getTime();
+          if (!isNaN(taskTime) && taskTime < now) {
+            console.log(
+              `index.js: Automatically completing past task ID: ${task.id}`
+            );
+            task.completed = true;
+            tasksUpdated = true;
+          }
+        }
+        return task;
+      });
+
+      if (tasksUpdated) {
+        localStorage.setItem("tasks", JSON.stringify(tasks)); // Зберігаємо зміни, якщо вони були
+      }
+    } catch (error) {
+      console.error("index.js: Error during auto-completion check:", error);
+    }
     renderTasks({ searchTerm: currentSearchTerm, status: currentFilterStatus }); // Відображаємо завдання при завантаженні сторінки
     attachTaskListeners(); // Додаємо слухачі до завдань після першого рендерингу
 
