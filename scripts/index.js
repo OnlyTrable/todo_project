@@ -14,26 +14,10 @@ console.log("index.js: Script started"); // Перевірка запуску с
 // Додаємо ОДИН слухач події, який викличе функцію ПІСЛЯ завантаження DOM
 document.addEventListener("DOMContentLoaded", () => {
   console.log("index.js: DOMContentLoaded event fired");
-  renderTasks(); // Відображаємо завдання при завантаженні сторінки
   updateDateTime(); // Викликаємо імпортовану функцію
   // --- Функціонал для фільтрів ---
   const filterButtons = document.querySelectorAll(".filter-button");
   console.log("index.js: Filter buttons found:", filterButtons);
-  filterButtons.forEach((button) => {
-    button.addEventListener("click", handleFilterClick);
-  });
-  // --- Функціонал для перемикачів ---
-  // !!! Переконайтеся, що цей рядок є тут, ПЕРЕД циклом forEach !!!
-  const switchContainerCh = document.querySelectorAll(".switch-container");
-  console.log("index.js: Switch containers found:", switchContainerCh);
-  // Додаємо обробник кліку до кожного перемикача
-  switchContainerCh.forEach((switchElement) => {
-    // Цей рядок, ймовірно, є рядком 26 або близько того
-    switchElement.addEventListener("click", function () {
-      this.classList.toggle("is-off");
-      toggleAriaChecked(this);
-    });
-  });
   // --- Функціонал для FAB та форми додавання ---
   const fabButton = document.querySelector(".fab-button");
   const addTaskForm = document.getElementById("add-task-form");
@@ -46,6 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const taskDateTimeInput = addTaskForm.querySelector(
     '.task-input[type="datetime-local"]'
   ); // Поле дати/часу
+  // --- Поле пошуку ---
+  const searchInput = document.querySelector(".search-input");
+
+  // --- Контейнер завдань ---
+  const taskContainer = document.querySelector(".task-container");
 
   if (
     fabButton &&
@@ -54,7 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
     formOverlay &&
     saveTaskButton &&
     taskDescriptionInput &&
-    taskDateTimeInput
+    taskDateTimeInput &&
+    taskContainer && // Додаємо перевірку для taskContainer
+    searchInput // Додаємо перевірку для searchInput
   ) {
     // Додано cancelButton та formOverlay до умови
     console.log(
@@ -113,6 +104,68 @@ document.addEventListener("DOMContentLoaded", () => {
       // TODO: Додати виклик функції для оновлення списку завдань на сторінці
       // renderTasks();
       renderTasks(); // Оновлюємо список після додавання нового завдання
+      attachTaskListeners(); // Переприв'язуємо слухачі після рендерингу
+    });
+    // --- Змінні для зберігання поточних фільтрів ---
+    let currentSearchTerm = "";
+    let currentFilterStatus = "all"; // 'all', 'active', 'completed'
+
+    // --- Функція для додавання слухачів до завдань (використовуємо делегування) ---
+    function attachTaskListeners() {
+      console.log("index.js: Attaching listeners to task container");
+      // Видаляємо попередній слухач, щоб уникнути дублювання, якщо функція викликається кілька разів
+      taskContainer.removeEventListener("click", handleTaskClick);
+      // Додаємо нового слухача
+      taskContainer.addEventListener("click", handleTaskClick);
+    }
+
+    // --- Обробник кліків всередині контейнера завдань ---
+    function handleTaskClick(event) {
+      const checkboxContainer = event.target.closest(
+        ".task-checkbox-container"
+      );
+      if (checkboxContainer) {
+        const taskId = checkboxContainer.dataset.taskId;
+        console.log(`index.js: Checkbox clicked for task ID: ${taskId}`);
+        if (taskId) {
+          // 1. Отримуємо завдання з LocalStorage
+          let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+          // 2. Знаходимо індекс завдання
+          const taskIndex = tasks.findIndex((task) => task.id == taskId); // Використовуємо ==, бо ID з dataset - рядок
+          if (taskIndex !== -1) {
+            // 3. Змінюємо статус completed
+            tasks[taskIndex].completed = !tasks[taskIndex].completed;
+            // 4. Зберігаємо оновлений список
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            // 5. Перерендеримо список, щоб показати зміни
+            renderTasks({
+              searchTerm: currentSearchTerm,
+              status: currentFilterStatus,
+            }); // Передаємо поточні фільтри
+            attachTaskListeners(); // Важливо переприв'язати слухачі після рендерингу!
+          }
+        }
+      }
+    }
+
+    // --- Ініціалізація ---
+    renderTasks({ searchTerm: currentSearchTerm, status: currentFilterStatus }); // Відображаємо завдання при завантаженні сторінки
+    attachTaskListeners(); // Додаємо слухачі до завдань після першого рендерингу
+
+    // --- Обробник для поля пошуку ---
+    searchInput.addEventListener("input", (event) => {
+      currentSearchTerm = event.target.value; // Оновлюємо поточний пошуковий запит
+      console.log(`index.js: Search input changed: ${currentSearchTerm}`);
+      // Перерендеримо список з новим пошуковим запитом та поточним фільтром статусу
+      renderTasks({
+        searchTerm: currentSearchTerm,
+        status: currentFilterStatus,
+      });
+      attachTaskListeners(); // Переприв'язуємо слухачі
+    });
+    // Додаємо слухачі до кнопок фільтрів
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", handleFilterClick);
     });
   } else {
     console.error(
@@ -126,5 +179,9 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     if (!cancelButton)
       console.error("Не вдалося знайти кнопку скасування (.cancel-button)!"); // Додано перевірку
+    if (!searchInput)
+      console.error("Не вдалося знайти поле пошуку (.search-input)!"); // Додано перевірку
+    if (!taskContainer)
+      console.error("Не вдалося знайти контейнер завдань (.task-container)!"); // Додано перевірку
   }
 }); // Кінець єдиного обробника DOMContentLoaded
