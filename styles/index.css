@@ -369,6 +369,7 @@
   letter-spacing: 0.5px;
   color: #49454f; /* Оновлено колір */
 }
+
 .form-button-container {
   display: flex; /* Вмикаємо Flexbox */
   width: 396px; /* Ширина контейнера */

@@ -103,7 +103,14 @@
         class="drag-handle-icon"
       />
     </div>
-    <input type="text" class="task-input" placeholder="Описание" />
+    <!-- Залишаємо тільки інпут з maxlength -->
+    <input
+      type="text"
+      class="task-input task-description-input"
+      placeholder="Описание задачи"
+      maxlength="150"
+    />
+
     <input
       type="text"
       id="task-datetime-picker"

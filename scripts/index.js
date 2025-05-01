@@ -28,9 +28,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const formOverlay = document.getElementById("form-overlay"); // Знаходимо overlay
   const cancelButton = document.querySelector(".cancel-button"); // Знаходимо кнопку "Отмена"
   const saveTaskButton = document.querySelector(".save-task-button"); // Знаходимо кнопку "Добавить"
+  // Оновлюємо селектор для інпута опису
   const taskDescriptionInput = addTaskForm.querySelector(
-    '.task-input[type="text"]'
-  ); // Поле опису
+    ".task-description-input"
+  );
   // Знаходимо поле за новим ID
   const taskDateTimePicker = document.getElementById("task-datetime-picker");
 
@@ -95,6 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log(
       "index.js: Attaching listeners for FAB, Cancel button and Overlay"
     );
+
     initializeDateTimePicker(taskDateTimePicker); // Викликаємо імпортовану функцію
     fabButton.addEventListener("click", () => {
       showAddTaskForm(
@@ -176,6 +178,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (taskIndex !== -1) {
           tasks[taskIndex].description = description;
           tasks[taskIndex].dateTime = dateTime;
+          // --- Додано: Реактивація завдання, якщо нова дата в майбутньому ---
+          const newDateTime = new Date(dateTime).getTime();
+          const now = Date.now();
+          if (!isNaN(newDateTime) && newDateTime > now) {
+            tasks[taskIndex].completed = false; // Робимо завдання знову активним
+            console.log(
+              `index.js: Reactivated task ID: ${editingTaskId} due to future date.`
+            );
+          }
+          // --- Кінець доданого коду ---
           console.log(`index.js: Updated task ID: ${editingTaskId}`);
         } else {
           console.error(
@@ -317,6 +329,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
       console.error("index.js: Error during auto-completion check:", error);
     }
+
+    // --- Автоматичне видалення завдань, старших за тиждень ---
+    try {
+      let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+      const originalTaskCount = tasks.length;
+      const now = Date.now();
+      const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000; // Мілісекунди за 7 днів
+
+      // Фільтруємо, залишаючи тільки ті завдання, ID (час створення) яких не старший за тиждень
+      const recentTasks = tasks.filter((task) => task.id >= oneWeekAgo);
+
+      if (recentTasks.length < originalTaskCount) {
+        const removedCount = originalTaskCount - recentTasks.length;
+        console.log(
+          `index.js: Automatically removing ${removedCount} task(s) older than one week.`
+        );
+        localStorage.setItem("tasks", JSON.stringify(recentTasks)); // Зберігаємо відфільтрований список
+      }
+    } catch (error) {
+      console.error("index.js: Error during old task cleanup:", error);
+    }
+    // --- Кінець автоматичного видалення ---
+
     renderTasks({ searchTerm: currentSearchTerm, status: currentFilterStatus }); // Відображаємо завдання при завантаженні сторінки
     attachTaskListeners(); // Додаємо слухачі до завдань після першого рендерингу
 
