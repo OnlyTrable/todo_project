@@ -22,13 +22,13 @@ body {
   gap: 16px;
   position: relative; /* Для позиціонування FAB */
 }
-}
 .datatime {
   width: 396px;
   /*height: 46px;*/
   display: flex; /* Вмикає Flexbox */
   flex-direction: column; /* Розташовує дочірні елементи в стовпчик */
   align-items: flex-start; /* Вирівнює їх по лівому краю */
+  align-self: flex-start;
   padding: 24px 16px 8px 16px; /* Додаємо відступи: верх право низ ліво */
 }
 .day-of-week {
