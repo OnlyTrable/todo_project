@@ -301,7 +301,8 @@ body {
   display: none; /* Прихована за замовчуванням */
   position: fixed;
   bottom: 0;
-  left: 0; /* Або 50% з transform: translateX(-50%) для центрування */
+  left: 50%; /* Або 50% з transform: translateX(-50%) для центрування */
+  transform: translateX(-50%); /* Центруємо горизонтально */
   width: 428px;
   height: 328px;
   background-color: #f7f2fa;
@@ -334,8 +335,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* Чорний з 40% прозорістю */
-  z-index: 999; /* Має бути нижче форми (z-index: 1000), але вище решти контенту */
+  background-color: rgba(0, 0, 0, 0.5); /* Чорний з 40% прозорістю */
+  z-index: 100; /* Має бути нижче форми (z-index: 1000), але вище решти контенту */
   /* display: none; */ /* Буде керуватися класом .hidden */
   /* Можна додати плавний перехід */
   /* transition: opacity 0.3s ease; */
