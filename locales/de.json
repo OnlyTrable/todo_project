@@ -1,0 +1,17 @@
+{
+  "appTitle": "Todo-App",
+  "searchPlaceholder": "Suchen",
+  "headerTitle": "Aufgabenliste",
+  "filterAll": "Alle",
+  "filterActive": "Aktiv",
+  "filterCompleted": "Erledigt",
+  "taskDescPlaceholder": "Aufgabenbeschreibung",
+  "taskDateTimePlaceholder": "Datum und Uhrzeit auswählen",
+  "addButton": "Hinzufügen",
+  "cancelButton": "Abbrechen",
+  "saveButton": "Speichern",
+  "alertDescRequired": "Bitte geben Sie eine Aufgabenbeschreibung ein.",
+  "alertDateTimeRequired": "Bitte wählen Sie Datum und Uhrzeit für die Aufgabe aus.",
+  "noTasks": "Keine Aufgaben zum Anzeigen.",
+  "remindMeLabel": "Mich erinnern"
+}

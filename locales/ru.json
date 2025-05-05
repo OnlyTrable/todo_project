@@ -1,0 +1,17 @@
+{
+  "appTitle": "Список дел",
+  "searchPlaceholder": "Поиск",
+  "headerTitle": "Список дел",
+  "filterAll": "Все",
+  "filterActive": "Активные",
+  "filterCompleted": "Завершенные",
+  "taskDescPlaceholder": "Описание задачи",
+  "taskDateTimePlaceholder": "Выберите дату и время",
+  "addButton": "Добавить",
+  "cancelButton": "Отмена",
+  "saveButton": "Сохранить",
+  "alertDescRequired": "Пожалуйста, введите описание задачи.",
+  "alertDateTimeRequired": "Пожалуйста, выберите дату и время задачи.",
+  "noTasks": "Нет задач для отображения.",
+  "remindMeLabel": "Напомнить мне"
+}

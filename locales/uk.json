@@ -1,0 +1,17 @@
+{
+  "appTitle": "Список справ",
+  "searchPlaceholder": "Пошук",
+  "headerTitle": "Список справ",
+  "filterAll": "Всі",
+  "filterActive": "Активні",
+  "filterCompleted": "Завершені",
+  "taskDescPlaceholder": "Опис завдання",
+  "taskDateTimePlaceholder": "Оберіть дату та час",
+  "addButton": "Додати",
+  "cancelButton": "Скасувати",
+  "saveButton": "Зберегти",
+  "alertDescRequired": "Будь ласка, введіть опис завдання.",
+  "alertDateTimeRequired": "Будь ласка, оберіть дату та час завдання.",
+  "noTasks": "Немає завдань для відображення.",
+  "remindMeLabel": "Нагадати мені"
+}

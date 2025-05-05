@@ -2,6 +2,15 @@
   padding: 0px;
   margin: 0px;
 }
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #f8f8f8; /* Світло-сірий фон */
+  display: flex; /* Додано для можливого вертикального центрування */
+  justify-content: center; /* Горизонтальне центрування */
+  align-items: flex-start; /* Вирівнювання зверху */
+  min-height: 100vh; /* Мінімальна висота для центрування */
+  margin: 0;
+}
 .main-container {
   width: 428px;
   height: 926px;
@@ -11,7 +20,8 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  font-family: "Inter";
+  position: relative; /* Для позиціонування FAB */
+}
 }
 .datatime {
   width: 396px;
@@ -267,9 +277,9 @@
 }
 
 .fab-button {
-  position: fixed; /* Фіксоване позиціонування відносно вікна браузера */
-  bottom: 16px; /* 16px від нижнього краю */
-  right: 16px; /* 16px від правого краю */
+  position: absolute; /* Фіксоване позиціонування відносно вікна браузера */
+  bottom: 50px; /* 16px від нижнього краю */
+  right: 5px; /* 16px від правого краю */
   width: 56px; /* Стандартна ширина FAB */
   height: 56px; /* Стандартна висота FAB */
   background-color: #ebdef7;

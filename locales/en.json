@@ -1,0 +1,17 @@
+{
+  "appTitle": "Todo App",
+  "searchPlaceholder": "Search",
+  "headerTitle": "Todo List",
+  "filterAll": "All",
+  "filterActive": "Active",
+  "filterCompleted": "Completed",
+  "taskDescPlaceholder": "Task description",
+  "taskDateTimePlaceholder": "Select date and time",
+  "addButton": "Add",
+  "cancelButton": "Cancel",
+  "saveButton": "Save",
+  "alertDescRequired": "Please enter a task description.",
+  "alertDateTimeRequired": "Please select a date and time for the task.",
+  "noTasks": "No tasks to display.",
+  "remindMeLabel": "Remind me"
+}
